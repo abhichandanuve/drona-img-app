@@ -1,7 +1,12 @@
 from django.urls import path
 from .views import *
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
+router = DefaultRouter()
+router.register('project', ProjectViewset, basename = 'project') 
+urlpatterns = router.urls
 
-    path('', home)
-]
+# urlpatterns = [
+
+#     path('', home)
+# ]
