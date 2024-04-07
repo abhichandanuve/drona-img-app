@@ -45,9 +45,7 @@ const ImageUpload = () => {
 
       const metadata = {
         width: exifData?.PixelXDimension,
-        height: imageHeight,
-        make: exifData?.Make,
-        model: exifData?.Model,
+        height: Math.floor(imageHeight),
         dateTime: exifData?.DateTimeOriginal,
         speed: imageSpeed,
         lat: DMS2DD(latDeg, latMin, latSec, latDir),
@@ -73,6 +71,7 @@ const ImageUpload = () => {
   const uploadImages = () => {
     console.log(images, 'images')
     images.forEach((image)=>{
+      console.log(image.metadata, 'check');
       AxiosInstance.post(`project/`, image.metadata);
     })
     // const d = AxiosInstance.get(`project/3`, {
