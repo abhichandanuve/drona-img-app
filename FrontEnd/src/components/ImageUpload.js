@@ -16,6 +16,7 @@ const ImageUpload = () => {
 
   const handleFileChange = async (event) => {
     const fileList = event.target.files;
+  
     const selectedImages = [];
 
     for (let i = 0; i < fileList.length; i++) {
@@ -64,7 +65,15 @@ const ImageUpload = () => {
   };
 
   const uploadImages = () => {
-    console.log(images);
+    AxiosInstance.post(`project/`, {
+      name: 'luffy',
+      height: 165
+    });
+    const d = AxiosInstance.get(`project/3`, {
+      name: 'Luffy',
+      height: 165
+    });
+    console.log(d);
     // FormData to send images and their EXIF data to the server
     // const formData = new FormData();
     // images.forEach(({ file, exifData }) => {
