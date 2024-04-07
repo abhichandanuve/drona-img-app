@@ -24,6 +24,10 @@ const ImageUpload = () => {
       const file = fileList[i];
       const exifData = await readEXIFData(file);
       console.log(exifData, "exifData");
+      if(Object.keys(exifData)) {
+        console.log("ExifData does not exits")
+        return;
+      }
       const ppi = 300;
       const ppi_to_ppm = 0.0254;
       const ppm = ppi * ppi_to_ppm;
