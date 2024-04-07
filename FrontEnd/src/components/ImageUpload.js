@@ -97,7 +97,7 @@ const ImageUpload = () => {
         onChange={handleFileChange}
         className="file-label"
       />
-      <button disabled={!images.length} onClick={uploadImages} className="upload-button">
+      <button onClick={uploadImages} className="upload-button">
         Upload Images
       </button>
       {images.length ? (
