@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import EXIF from "exif-js";
 import "../styles/ImageUpload.css";
 import MapWithMarkers from "./MapWithMarkers";
+import AxiosInstance  from "../Axios";
 const ImageUpload = () => {
   const [images, setImages] = useState([]);
+
   const locations = [
     { name: "New York", lat: 40.7128, lng: -74.006 },
     { name: "Los Angeles", lat: 34.0522, lng: -118.2437 },
@@ -11,6 +13,7 @@ const ImageUpload = () => {
 
   const handleFileChange = async (event) => {
     const fileList = event.target.files;
+  
     const selectedImages = [];
 
     for (let i = 0; i < fileList.length; i++) {
@@ -23,7 +26,7 @@ const ImageUpload = () => {
         model: exifData.Model,
         dateTime: exifData.DateTimeOriginal,
       };
-      selectedImages.push({ file, exifData });
+      selectedImages.push({ ...file, exifData });
     }
 
     setImages(selectedImages);
@@ -39,7 +42,15 @@ const ImageUpload = () => {
   };
 
   const uploadImages = () => {
-    console.log(images);
+    AxiosInstance.post(`project/`, {
+      name: 'HARSHADI-RANDI',
+      height: 165
+    });
+    const d = AxiosInstance.get(`project/3`, {
+      name: 'HARSHADI-RANDI',
+      height: 165
+    });
+    console.log(d);
     // FormData to send images and their EXIF data to the server
     // const formData = new FormData();
     // images.forEach(({ file, exifData }) => {
