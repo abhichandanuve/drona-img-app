@@ -67,8 +67,9 @@ const ImageUpload = () => {
   };
 
   const uploadImages = () => {
-    console.log(images);
-    AxiosInstance.post(`project/`, images);
+    images.forEach((image)=>{
+      AxiosInstance.post(`project/`, image);
+    })
     // const d = AxiosInstance.get(`project/3`, {
     //   name: 'Luffy',
     //   height: 165
