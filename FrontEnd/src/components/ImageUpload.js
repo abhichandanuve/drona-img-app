@@ -43,11 +43,11 @@ const ImageUpload = () => {
 
   const uploadImages = () => {
     AxiosInstance.post(`project/`, {
-      name: 'HARSHADI-RANDI',
+      name: 'luffy',
       height: 165
     });
     const d = AxiosInstance.get(`project/3`, {
-      name: 'HARSHADI-RANDI',
+      name: 'Luffy',
       height: 165
     });
     console.log(d);
