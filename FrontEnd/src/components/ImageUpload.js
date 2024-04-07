@@ -48,7 +48,7 @@ const ImageUpload = () => {
         speed: imageSpeed,
         lat: DMS2DD(latDeg, latMin, latSec, latDir),
         lng: DMS2DD(lngDeg, lngMin, lngSec, lngDir),
-        isFlaged: imageHeight > 60 || imageSpeed > 5,
+        isFlagged: imageHeight > 60 || imageSpeed > 5,
         name: file.name,
       };
       selectedImages.push({ ...images, metadata });
