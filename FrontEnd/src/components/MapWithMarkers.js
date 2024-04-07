@@ -10,21 +10,24 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const MapWithMarkers = ({ locations }) => {
+const MapWithMarkers = ({ images }) => {
+        
+  console.log(images, 'images')
   return (
     <div style={{ height: "400px", width: "100%" }}>
-      <MapContainer
-        center={[locations[0].lat, locations[0].lng]}
-        zoom={10}
+      {!!images.length &&
+        <MapContainer
+        center={[images[0].metadata.lat, images[0].metadata.lng]}
+        zoom={2}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {locations.map((location, index) => (
-          <Marker key={index} position={[location.lat, location.lng]}>
-            <Popup>{location.name}</Popup>
+        {images.map((image, index) => (
+          <Marker key={index} position={[image.metadata.lat, image.metadata.lng]}>
+            <Popup>{image.name}</Popup>
           </Marker>
         ))}
-      </MapContainer>
+      </MapContainer>}
     </div>
   );
 };
