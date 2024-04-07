@@ -6,7 +6,7 @@ import AxiosInstance from "../Axios";
 import MapChart from "./ImageChart";
 
 function DMS2DD(degrees, minutes, seconds, direction) {
-  var dd = degrees + (minutes/60) + (seconds/3600);
+  var dd = degrees + minutes / 60 + seconds / 3600;
   if (direction == "S" || direction == "W") {
     dd = dd * -1;
   }
@@ -23,13 +23,13 @@ const ImageUpload = () => {
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
       const exifData = await readEXIFData(file);
-      console.log(exifData, 'exifData')
-      const ppi = 300
-      const ppi_to_ppm = 0.0254
-      const ppm = ppi * ppi_to_ppm
-      const pow = 2**exifData.ShutterSpeedValue;
-      const imageHeight = exifData.PixelYDimension / ppm
-      const imageSpeed = 1/pow
+      console.log(exifData, "exifData");
+      const ppi = 300;
+      const ppi_to_ppm = 0.0254;
+      const ppm = ppi * ppi_to_ppm;
+      const pow = 2 ** exifData.ShutterSpeedValue;
+      const imageHeight = exifData.PixelYDimension / ppm;
+      const imageSpeed = 1 / pow;
       const latDeg = exifData.GPSLatitude[0].numerator;
       const latMin = exifData.GPSLatitude[1].numerator;
       const latSec = exifData.GPSLatitude[2].numerator;
@@ -48,8 +48,8 @@ const ImageUpload = () => {
         speed: imageSpeed,
         lat: DMS2DD(latDeg, latMin, latSec, latDir),
         lng: DMS2DD(lngDeg, lngMin, lngSec, lngDir),
-        isFlaged: (imageHeight > 60) || (imageSpeed >5),
-        name: file.name
+        isFlaged: imageHeight > 60 || imageSpeed > 5,
+        name: file.name,
       };
       selectedImages.push({ ...images, metadata });
     }
@@ -68,7 +68,7 @@ const ImageUpload = () => {
 
   const uploadImages = () => {
     console.log(images);
-    AxiosInstance.post(`project/`,images);
+    AxiosInstance.post(`project/`, images);
     // const d = AxiosInstance.get(`project/3`, {
     //   name: 'Luffy',
     //   height: 165
@@ -94,11 +94,15 @@ const ImageUpload = () => {
       <button onClick={uploadImages} className="upload-button">
         Upload Images
       </button>
-      <div>
-        <h1>Map with Markers</h1>
-        <MapWithMarkers images={images} />
-        <MapChart />
-      </div>
+      {images.length ? (
+        <div>
+          <h1>Analytics Section</h1>
+          <MapWithMarkers images={images} />
+          <MapChart />
+        </div>
+      ) : (
+        <h2> Please upload your images to view the Analytics Section</h2>
+      )}
     </div>
   );
 };
