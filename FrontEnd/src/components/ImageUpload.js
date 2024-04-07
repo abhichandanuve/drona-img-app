@@ -30,21 +30,21 @@ const ImageUpload = () => {
       const pow = 2 ** exifData.ShutterSpeedValue;
       const imageHeight = exifData.PixelYDimension / ppm;
       const imageSpeed = 1 / pow;
-      const latDeg = exifData.GPSLatitude[0].numerator;
-      const latMin = exifData.GPSLatitude[1].numerator;
-      const latSec = exifData.GPSLatitude[2].numerator;
-      const latDir = exifData.GPSLatitudeRef;
-      const lngDeg = exifData.GPSLongitude[0].numerator;
-      const lngMin = exifData.GPSLongitude[1].numerator;
-      const lngSec = exifData.GPSLongitude[2].numerator;
-      const lngDir = exifData.GPSLongitudeRef;
+      const latDeg = exifData?.GPSLatitude?.[0].numerator;
+      const latMin = exifData?.GPSLatitude?.[1].numerator;
+      const latSec = exifData?.GPSLatitude?.[2].numerator;
+      const latDir = exifData?.GPSLatitudeRef;
+      const lngDeg = exifData?.GPSLongitude?.[0].numerator;
+      const lngMin = exifData?.GPSLongitude?.[1].numerator;
+      const lngSec = exifData?.GPSLongitude?.[2].numerator;
+      const lngDir = exifData?.GPSLongitudeRef;
 
       const metadata = {
-        width: exifData.PixelXDimension,
+        width: exifData?.PixelXDimension,
         height: imageHeight,
-        make: exifData.Make,
-        model: exifData.Model,
-        dateTime: exifData.DateTimeOriginal,
+        make: exifData?.Make,
+        model: exifData?.Model,
+        dateTime: exifData?.DateTimeOriginal,
         speed: imageSpeed,
         lat: DMS2DD(latDeg, latMin, latSec, latDir),
         lng: DMS2DD(lngDeg, lngMin, lngSec, lngDir),
@@ -67,8 +67,9 @@ const ImageUpload = () => {
   };
 
   const uploadImages = () => {
+    console.log(images, 'images')
     images.forEach((image)=>{
-      AxiosInstance.post(`project/`, image);
+      AxiosInstance.post(`project/`, image.metadata);
     })
     // const d = AxiosInstance.get(`project/3`, {
     //   name: 'Luffy',
@@ -92,7 +93,7 @@ const ImageUpload = () => {
         onChange={handleFileChange}
         className="file-label"
       />
-      <button onClick={uploadImages} className="upload-button">
+      <button disabled={!images.length} onClick={uploadImages} className="upload-button">
         Upload Images
       </button>
       {images.length ? (
