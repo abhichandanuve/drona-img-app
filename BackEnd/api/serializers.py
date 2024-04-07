@@ -4,5 +4,6 @@ from .models import *
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('name', 'height')
+        fields = ('name', 'height', 'width', 'make', 'model', 'dateTime', 'speed', 'lat', 'lng', 'isFlagged')
+
         
