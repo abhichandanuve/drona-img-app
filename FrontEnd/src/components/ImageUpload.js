@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import EXIF from "exif-js";
 import "../styles/ImageUpload.css";
 import MapWithMarkers from "./MapWithMarkers";
+import AxiosInstance from "../Axios";
+import MapChart from "./ImageChart";
 
 function DMS2DD(degrees, minutes, seconds, direction) {
   var dd = degrees + (minutes/60) + (seconds/3600);
@@ -16,7 +18,6 @@ const ImageUpload = () => {
 
   const handleFileChange = async (event) => {
     const fileList = event.target.files;
-  
     const selectedImages = [];
 
     for (let i = 0; i < fileList.length; i++) {
@@ -47,7 +48,8 @@ const ImageUpload = () => {
         speed: imageSpeed,
         lat: DMS2DD(latDeg, latMin, latSec, latDir),
         lng: DMS2DD(lngDeg, lngMin, lngSec, lngDir),
-        isFlaged: (imageHeight > 60) || (imageSpeed >5)
+        isFlaged: (imageHeight > 60) || (imageSpeed >5),
+        name: file.name
       };
       selectedImages.push({ ...images, metadata });
     }
@@ -65,15 +67,13 @@ const ImageUpload = () => {
   };
 
   const uploadImages = () => {
-    AxiosInstance.post(`project/`, {
-      name: 'luffy',
-      height: 165
-    });
-    const d = AxiosInstance.get(`project/3`, {
-      name: 'Luffy',
-      height: 165
-    });
-    console.log(d);
+    console.log(images);
+    AxiosInstance.post(`project/`,images);
+    // const d = AxiosInstance.get(`project/3`, {
+    //   name: 'Luffy',
+    //   height: 165
+    // });
+    // console.log(d);
     // FormData to send images and their EXIF data to the server
     // const formData = new FormData();
     // images.forEach(({ file, exifData }) => {
@@ -97,6 +97,7 @@ const ImageUpload = () => {
       <div>
         <h1>Map with Markers</h1>
         <MapWithMarkers images={images} />
+        <MapChart />
       </div>
     </div>
   );
