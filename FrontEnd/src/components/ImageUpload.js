@@ -92,7 +92,7 @@ const ImageUpload = () => {
           setShowToast(err.response.data.name[0]);
           setTimeout(() => {
             setShowToast(false);
-          }, 50000);
+          }, 5000);
         });
     });
     setImages([]);

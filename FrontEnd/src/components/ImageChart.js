@@ -15,7 +15,7 @@ const getAxis = (data, type) => {
     const val = item[type];
     result.push({
       x: item.name,
-      y: (type === "height" ? val : val * 10 ** 5).toFixed(3),
+      y: ((type === "height" || type === 'isFlagged') ? (typeof val === 'number' ? val : item["height"]) : val * 10 ** 5)?.toFixed(3),
     });
   });
   return result;
@@ -90,6 +90,10 @@ const MapChart = ({ analyticsData, onClickGraph }) => {
     {
       name: "Speed (speed*10^5)",
       data: getAxis(analyticsData, "speed"),
+    },
+    {
+      name: "isFlagged",
+      data: getAxis(analyticsData, "isFlagged"),
     },
   ];
   return (
