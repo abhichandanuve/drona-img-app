@@ -17,7 +17,7 @@ const MapWithMarkers = ({ images, graphData }) => {
         center={
           Object.keys(graphData).length
             ? [graphData.lat, graphData.lng]
-            : [images[4].lat, images[4].lng]
+            : [images[0].lat, images[0].lng]
         }
         zoom={2}
         style={{ height: "100%", width: "100%" }}

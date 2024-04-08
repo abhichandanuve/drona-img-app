@@ -16,8 +16,10 @@ function DMS2DD(degrees, minutes, seconds, direction) {
 const ImageUpload = () => {
   const [images, setImages] = useState([]);
   const [analyticsData, setAnalyticsData] = useState([]);
-  const [activeTab, setActiveTab] = useState("tab1"); // State to track active tab
+  const [activeTab, setActiveTab] = useState("tab1");
   const [graphData, setGraphData] = useState({});
+  const [showToast, setShowToast] = useState(false);
+
   const getAnalyticsData = () => {
     AxiosInstance.get(`project/`).then((res) => {
       setAnalyticsData(res.data);
@@ -84,7 +86,14 @@ const ImageUpload = () => {
 
   const uploadImages = () => {
     images.forEach((image) => {
-      AxiosInstance.post(`project/`, image.metadata);
+      AxiosInstance.post(`project/`, image.metadata)
+        .then((res) => setShowToast("Image Uploaded Successfully!"))
+        .catch((err) => {
+          setShowToast(err.response.data.name[0]);
+          setTimeout(() => {
+            setShowToast(false);
+          }, 50000);
+        });
     });
     setImages([]);
     getAnalyticsData();
@@ -92,7 +101,15 @@ const ImageUpload = () => {
 
   return (
     <div className="container">
-      <h1>DronaMaps</h1>
+      <div className={`toast ${showToast ? "show" : ""}`}>
+        <div className="toast-message">{showToast}</div>
+        <button className="close-button" onClick={() => setShowToast(false)}>
+          &times;
+        </button>
+      </div>
+      <h1>
+        <u>DronaMaps</u>
+      </h1>
       <div className="input-container">
         <input
           type="file"
