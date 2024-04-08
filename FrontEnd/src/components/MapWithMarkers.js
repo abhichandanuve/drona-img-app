@@ -10,23 +10,33 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const MapWithMarkers = ({ images }) => {
+const MapWithMarkers = ({ images, graphData }) => {
   return (
     <div style={{ height: "400px", width: "100%" }}>
       <MapContainer
-        center={[images[0].metadata.lat, images[0].metadata.lng]}
+        center={
+          Object.keys(graphData).length
+            ? [graphData.lat, graphData.lng]
+            : [images[4].lat, images[4].lng]
+        }
         zoom={2}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {images.map((image, index) => (
-          <Marker
-            key={index}
-            position={[image.metadata.lat, image.metadata.lng]}
-          >
-            <Popup>{image.name}</Popup>
+        {Object.keys(graphData).length ? (
+          <Marker position={[graphData.lat, graphData.lng]}>
+            <Popup>{graphData.name}</Popup>
           </Marker>
-        ))}
+        ) : (
+          images.map(
+            (image, index) =>
+              image.lat && (
+                <Marker key={index} position={[image.lat, image.lng]}>
+                  <Popup>{image.name}</Popup>
+                </Marker>
+              )
+          )
+        )}
       </MapContainer>
     </div>
   );

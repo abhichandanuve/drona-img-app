@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EXIF from "exif-js";
 import "../styles/ImageUpload.css";
 import MapWithMarkers from "./MapWithMarkers";
@@ -7,7 +7,7 @@ import MapChart from "./ImageChart";
 
 function DMS2DD(degrees, minutes, seconds, direction) {
   var dd = degrees + minutes / 60 + seconds / 3600;
-  if (direction == "S" || direction == "W") {
+  if (direction === "S" || direction === "W") {
     dd = dd * -1;
   }
   return dd;
@@ -15,7 +15,22 @@ function DMS2DD(degrees, minutes, seconds, direction) {
 
 const ImageUpload = () => {
   const [images, setImages] = useState([]);
+  const [analyticsData, setAnalyticsData] = useState([]);
+  const [activeTab, setActiveTab] = useState("tab1"); // State to track active tab
+  const [graphData, setGraphData] = useState({});
+  const getAnalyticsData = () => {
+    AxiosInstance.get(`project/`).then((res) => {
+      setAnalyticsData(res.data);
+    });
+  };
 
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
+  };
+
+  useEffect(() => {
+    getAnalyticsData();
+  }, [images]);
   const handleFileChange = async (event) => {
     const fileList = event.target.files;
     const selectedImages = [];
@@ -24,8 +39,8 @@ const ImageUpload = () => {
       const file = fileList[i];
       const exifData = await readEXIFData(file);
       console.log(exifData, "exifData");
-      if(!Object.keys(exifData)) {
-        console.log("ExifData does not exits")
+      if (!Object.keys(exifData)) {
+        console.log("ExifData does not exits");
         return;
       }
       const ppi = 300;
@@ -55,7 +70,6 @@ const ImageUpload = () => {
       };
       selectedImages.push({ ...images, metadata });
     }
-
     setImages(selectedImages);
   };
 
@@ -69,44 +83,82 @@ const ImageUpload = () => {
   };
 
   const uploadImages = () => {
-    console.log(images, 'images')
-    images.forEach((image)=>{
-      console.log(image.metadata, 'check');
+    images.forEach((image) => {
       AxiosInstance.post(`project/`, image.metadata);
-    })
-    // const d = AxiosInstance.get(`project/3`, {
-    //   name: 'Luffy',
-    //   height: 165
-    // });
-    // console.log(d);
-    // FormData to send images and their EXIF data to the server
-    // const formData = new FormData();
-    // images.forEach(({ file, exifData }) => {
-    //   formData.append('images[]', file);
-    //   formData.append('exifData[]', JSON.stringify(exifData));
-    // });
-    // Then make an AJAX request to upload formData
+    });
+    setImages([]);
+    getAnalyticsData();
   };
 
   return (
     <div className="container">
-      <input
-        type="file"
-        multiple
-        onChange={handleFileChange}
-        className="file-label"
-      />
-      <button onClick={uploadImages} className="upload-button">
-        Upload Images
-      </button>
-      {images.length ? (
+      <h1>DronaMaps</h1>
+      <div className="input-container">
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="file-label"
+        />
+        <button onClick={uploadImages} className="upload-button">
+          Upload Images
+        </button>
+      </div>
+      {analyticsData.length ? (
         <div>
-          <h1>Analytics Section</h1>
-          <MapWithMarkers images={images} />
-          <MapChart />
+          <div className="tab-container">
+            <h1>Analytics Section</h1>
+            <div className="tab-container">
+              <div className="tabs">
+                <button
+                  className={`tab ${activeTab === "tab1" ? "active" : ""}`}
+                  onClick={() => {
+                    handleTabClick("tab1");
+                  }}
+                >
+                  Analytics Maps
+                </button>
+                <button
+                  className={`tab ${activeTab === "tab2" ? "active" : ""}`}
+                  onClick={() => {
+                    setGraphData({});
+                    handleTabClick("tab2");
+                  }}
+                >
+                  Analytics Graph
+                </button>
+              </div>
+              <div
+                id="tab1"
+                className={`tab-content ${
+                  activeTab === "tab1" ? "active" : ""
+                }`}
+              >
+                <MapWithMarkers images={analyticsData} graphData={graphData} />
+              </div>
+
+              <div
+                id="tab2"
+                className={`tab-content ${
+                  activeTab === "tab2" ? "active" : ""
+                }`}
+              >
+                <MapChart
+                  onClickGraph={(index) => {
+                    setGraphData(analyticsData[index]);
+                    handleTabClick("tab1");
+                  }}
+                  analyticsData={analyticsData}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
-        <h2> Please upload your images to view the Analytics Section</h2>
+        <h2>
+          There is no data, please upload your images to view the Analytics
+          Section
+        </h2>
       )}
     </div>
   );

@@ -12,6 +12,53 @@
   cursor: pointer;
   margin-right: 50px;
   margin-bottom: 20px;
+  margin-top: 20px;
+}
+/* Tabs container */
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* Tab buttons */
+.tab {
+  cursor: pointer;
+  padding: 10px 20px;
+  background-color: #ddd; /* Default tab button background color */
+  color: #333; /* Default tab button text color */
+  border: none;
+  outline: none;
+  transition: background-color 0.3s;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 8px;
+}
+
+.tab:hover {
+  background-color: #ccc; /* Tab button background color on hover */
+}
+
+/* Active tab button */
+.tab.active {
+  background-color: #007bff; /* Active tab button background color */
+  color: #fff; /* Active tab button text color */
+}
+
+/* Tab content */
+.tab-content {
+  display: none;
+  padding: 20px;
+}
+
+/* Active tab content */
+.tab-content.active {
+  display: block;
+}
+
+.input-container {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .upload-button {
